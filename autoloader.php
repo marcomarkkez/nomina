@@ -3,6 +3,7 @@ require_once 'controller/Log.php';
 
 if(function_exists('spl_autoload_register')){
   spl_autoload_register(function ($nombre_clase) {
+    $nombre_clase = ucfirst($nombre_clase);
     include "controller/".$nombre_clase.".php";
   });
 }else{

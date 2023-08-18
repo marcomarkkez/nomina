@@ -32,7 +32,7 @@ class Log{
 		$this->functionname = $f;
 	}
 
-	public function log($log){
+	public function writelog($log){
 		if (is_array($log) || is_object($log)) {
 			$stringlog = $this->prepend.$this->fecha.print_r($log, true).$this->append;
 			error_log($stringlog, 3, $this->$logfile);
