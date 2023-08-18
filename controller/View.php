@@ -1,5 +1,5 @@
 <?php
-require_once "../autoloader.php"
+require_once "autoloader.php";
 
 
 class View{
@@ -10,13 +10,15 @@ class View{
 	private $vue = '<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>';
 
 	public function view_tpl($tpl,$titulo){
-		$base = file_get_contents("../view/base.html");
-		$contenido = "../view/".$tpl.".php";
+		$base = file_get_contents("view/base.html");
+		$contenido = "view/".$tpl.".html";
 		if(!file_exists($contenido)){
 			$contenido = "";
+		}else{
+			$contenido = file_get_contents($contenido);
 		}
-		$search array("[[lang]]","[[head]]","[[title]]","[[contenido]]","[[footer_scripts]]");
-		$replace = array($lan,$btsrp_js.$btsrp_css.$vue,'<title>'.$titulo.'</title>',$contenido);
+		$search = array("[[lang]]","[[head]]","[[title]]","[[contenido]]","[[footer_scripts]]");
+		$replace = array($this->lan,$this->btsrp_js.$this->btsrp_css.$this->vue,$titulo,$contenido);
 		$html = str_replace($search, $replace, $base);
 		echo $html;
 	}
