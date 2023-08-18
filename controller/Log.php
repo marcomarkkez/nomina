@@ -1,7 +1,7 @@
 <?php
 
 class Log{
-	private $logfile = "../log.html";
+	private $logfile = "log.html";
 	private $corte = 3000;
 	private $prepend = '<p style="margin:10px;">';
 	private $append = '</p>';
@@ -34,14 +34,14 @@ class Log{
 
 	public function writelog($log){
 		if (is_array($log) || is_object($log)) {
-			$stringlog = $this->prepend.$this->fecha.print_r($log, true).$this->append;
-			error_log($stringlog, 3, $this->$logfile);
+			$stringlog = $this->prepend.$this->fecha().print_r($log, true).$this->append;
+			error_log($stringlog, 3, $this->logfile);
 		} else {
-			$stringlog = $this->fecha.$log;
-			error_log($stringlog, 3, $this->$logfile);
+			$stringlog = $this->prepend.$this->fecha().$log.$this->append;
+			error_log($stringlog, 3, $this->logfile);
 		}
 
-		$content = file($this->$logfile);
+		$content = file($this->logfile);
 		$tam_arr = count($content);
 		$corte = $this->corte;
 		if($tam_arr > $corte){
