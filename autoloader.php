@@ -10,4 +10,5 @@ if(function_exists('spl_autoload_register')){
   $log->fileName(__FILE__);
   $log->functionName(__FUNCTION__);
   $log->writelog("No existe la función spl_autoload_register");
+  
 }
