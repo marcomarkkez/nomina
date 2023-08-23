@@ -1,6 +1,6 @@
 <?php
 
-class Log{
+class LogController{
 	private $logfile = "log.html";
 	private $corte = 3000;
 	private $prepend = '<p style="margin:10px;">';
