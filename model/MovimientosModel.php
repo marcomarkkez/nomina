@@ -4,22 +4,26 @@ require_once "database.php";
 class MovimientosModel{
 
     public function obtener($args = []){
-        $empleados = new DatabaseModel();
-        $empleados->conectar();
+        $movimientos = new DatabaseModel();
+        $movimientos->conectar();
         if(empty($args)){
-            $query = "CALL get_movimientos()";
-            $stmt = $empleados->statement($query,[]);
+            $query = "CALL get_movimientos(?)";
+            $stmt = $movimientos->get_statement($query,"i",[0]);
             $res = $stmt->get_result();
             $resultados_arr = [];
-            while($empleado = $res->fetch_assoc()){
-                $resultados_arr[]['numero'] = $empleado['numero'];
-                $resultados_arr[]['nombre'] = $empleado['nombre'];
-                $resultados_arr[]['rol'] = $empleado['rol']; 
+            while($movimiento = $res->fetch_assoc()){
+                $resultados_arr[] = [
+                    'numero' => $movimiento['numero'],
+                    'nombre' => $movimiento['nombre'],
+                    'rol' => $movimiento['rol'],
+                    'entregas' => $movimiento['entregas'],
+                    'mes' => $movimiento['mes']
+                ];
             }
             return $resultados_arr;
         }else{
-            $query = "CALL get_empleados(?)";
-            $stmt = $empleados->statement($query,["i",$args['numero']]);
+            $query = "CALL get_movimientos(?)";
+            $stmt = $movimientos->get_statement($query,["i",$args['numero']]);
             $res = $stmt->get_result();
             $resultados_arr = [];
             while($empleado = $res->fetch_assoc()){
@@ -32,40 +36,40 @@ class MovimientosModel{
     }
     
     public function agregar($args){
-        $empleados = new DatabaseModel();
-        $empleados->conectar();
+        $movimientos = new DatabaseModel();
+        $movimientos->conectar();
         if(empty($args)){
             return false;
         }else{
-            $query = "CALL set_empleados(?,?,?)";
-            $stmt = $empleados->statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
-            $empleados->cerrar();
-            return $empleados->con->insert_id;
+            $query = "CALL set_movimientos(?,?,?)";
+            $stmt = $movimientos->insert_statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
+            $movimientos->cerrar();
+            return $movimientos->con->insert_id;
         }
     }
 
     public function actualizar($args){
-        $empleados = new DatabaseModel();
-        $empleados->conectar();
+        $movimientos = new DatabaseModel();
+        $movimientos->conectar();
         if(empty($args)){
             return false;
         }else{
-            $query = "CALL update_empleados(?,?,?)";
-            $stmt = $empleados->statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
-            $empleados->cerrar();
+            $query = "CALL update_movimientos(?,?,?)";
+            $stmt = $movimientos->update_statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
+            $movimientos->cerrar();
             return true;
         }
     }
 
     public function eliminar($id){
-        $empleados = new DatabaseModel();
-        $empleados->conectar();
+        $movimientos = new DatabaseModel();
+        $movimientos->conectar();
         if(empty($args)){
             return false;
         }else{
-            $query = "CALL delete_empleados(?)";
-            $stmt = $empleados->statement($query,["i",$args['numero']]);
-            $empleados->cerrar();
+            $query = "CALL delete_movimientos(?)";
+            $stmt = $movimientos->delete_statement($query,["i",$args['numero']]);
+            $movimientos->cerrar();
             return true;
         }
     }
