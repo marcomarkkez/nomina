@@ -10,8 +10,16 @@ class EmpleadosController{
    * @return void
    */
   public function empleados(){
+    $empleados = new EmpleadosModel;
+    $empleados->obtener();
+    $arrays = [
+      "empleados" => $empleados->obtener()
+    ];
+    $log = new LogController;
+    $log->writelog(__FUNCTION__." Arrays: ");
+    $log->writelog($arrays); 
     $view = new ViewController;
-    $view->view_tpl("empleados","Empleados");
+    $view->view_tpl("empleados.php","Empleados",$arrays);
   }
 
   /**

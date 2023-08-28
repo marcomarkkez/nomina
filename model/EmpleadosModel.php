@@ -7,18 +7,25 @@ class EmpleadosModel{
         $empleados->conectar();
         if(empty($args)){
             $query = "CALL get_empleados(?)";
-            $stmt = $empleados->statement($query,["i",$args['numero']]);
+            $stmt = $empleados->get_statement($query,"i",[0]);
             $res = $stmt->get_result();
             $resultados_arr = [];
             while($empleado = $res->fetch_assoc()){
-                $resultados_arr[]['numero'] = $empleado['numero'];
-                $resultados_arr[]['nombre'] = $empleado['nombre'];
-                $resultados_arr[]['rol'] = $empleado['rol']; 
+                $resultados_arr[] = [
+                    'numero' => $empleado['numero'],
+                    'nombre' => $empleado['nombre'],
+                    'rol' => $empleado['rol']
+                ];
             }
+            $log = new LogController;
+
+            $log->writelog(__CLASS__." ".__FUNCTION__);
+            $log->writelog("resultados_arr:");
+            $log->writelog($resultados_arr);
             return $resultados_arr;
         }else{
             $query = "CALL get_empleados(?)";
-            $stmt = $empleados->statement($query,["i",$args['numero']]);
+            $stmt = $empleados->get_statement($query,["i",$args['numero']]);
             $res = $stmt->get_result();
             $resultados_arr = [];
             while($empleado = $res->fetch_assoc()){
@@ -42,7 +49,7 @@ class EmpleadosModel{
             $query = "CALL set_empleados(?,?,?,?)";
             $empleados = new DatabaseModel;
             $empleados->conectar();
-            $stmt = $empleados->statement(
+            $stmt = $empleados->insert_statement(
                 $query,
                 "issi",
                 [
@@ -52,7 +59,6 @@ class EmpleadosModel{
                     "@LID"
                 ]
             );
-
             $empleados->cerrar();
             $log->writelog("$stmt: ".$stmt);
             return $stmt;
@@ -66,7 +72,7 @@ class EmpleadosModel{
             return false;
         }else{
             $query = "CALL update_empleados(?,?,?)";
-            $stmt = $empleados->statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
+            $stmt = $empleados->update_statement($query,["iss",$args['numero'],$args['nombre'],$args['rol']]);
             $empleados->cerrar();
             return true;
         }
@@ -79,7 +85,7 @@ class EmpleadosModel{
             return false;
         }else{
             $query = "CALL delete_empleados(?)";
-            $stmt = $empleados->statement($query,["i",$args['numero']]);
+            $stmt = $empleados->delete_statement($query,["i",$args['numero']]);
             $empleados->cerrar();
             return true;
         }

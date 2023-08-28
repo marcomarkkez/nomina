@@ -2,6 +2,37 @@
 <div class="d-flex gap-2 justify-content-center">
   <a href="/nomina/?var=empleados/nuevo" class="btn btn-primary" type="button">Nuevo</a>
 </div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Número</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Rol</th>
+      <th scope="col">Opciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    foreach($empleados as $empleado){
+    ?>
+      <tr>
+        <th scope="row"><?php echo $empleado['numero']; ?></th>
+        <td><?php echo $empleado['nombre']; ?></td>
+        <td><?php echo $empleado['rol']; ?></td>
+        <td>
+          <a style="border:none;" href="nominas/?var=empleados/editar/<?php echo $empleado['numero']; ?>">
+            <?php echo $edit_svg; ?>
+          </a>
+          <a style="border:none;" href="nominas/?var=empleados/borrar/<?php echo $empleado['numero']; ?>">
+            <?php echo $delete_svg; ?>
+          </a>
+        </td>
+      </tr>
+    <?php
+    }
+    ?>
+  </tbody>
+</table>
 <!--
   <div class="d-flex gap-2 justify-content-center">
   <br style="clear: both;">

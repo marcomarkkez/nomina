@@ -27,7 +27,6 @@ class DatabaseModel{
      * @return void
      */
     public function conectar($conexion = []){
-        
         if(isset($conexion['host'])){
             $this->host = $conexion['host'];
         }
@@ -40,7 +39,6 @@ class DatabaseModel{
         if(isset($conexion['db'])){
             $this->db = $conexion['db'];
         }
-        
         try{
             mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
             $this->con = new mysqli($this->host, $this->user, $this->password, $this->db);
@@ -50,45 +48,77 @@ class DatabaseModel{
         }catch(Exception $e){
             throw new Exception($e->getMessage());   
         }	
-
     }
 
-    /**
-     * Seguridad básica para los querys
-     */
-    public function statement($qry, $types, $params = []){
-        try{
+    public function cerrar(){
+        $this->con->close();
+    }
 
+    public function get_statement($qry, $types, $params = []){
+        try{
             $log = new LogController;
-            // $log->writelog("Statement ".__FUNCTION__." ".var_dump(func_get_args()));
-    
             $st = $this->con->prepare($qry);
             $st->bind_param($types, ...$params);
-
             if($st === false) {
                 throw New Exception("No se puede preparar: " . $qry);
             }
-        
             $st->execute();
-
-            $st2 = $this->con->prepare("SELECT @LID as id");
-            return $st2->insert_id;
-            // return $row->insert_id;
-
-            // $st2 = $this->con->query("SELECT @LID as id");
-            
-            // $row = $st2->fetch_object();
-            
-            // return $row->id;
-
+            return $st;
         }catch(Exception $e){
             throw New Exception( $e->getMessage() );
         }
         
     }
 
-    public function cerrar(){
-        $this->con->close();
+    /**
+     * Seguridad básica para los querys
+     */
+    public function insert_statement($qry, $types, $params = []){
+        try{
+            $log = new LogController;
+            $st = $this->con->prepare($qry);
+            $st->bind_param($types, ...$params);
+            if($st === false) {
+                throw New Exception("No se puede preparar: " . $qry);
+            }
+            $st->execute();
+            $st2 = $this->con->prepare("SELECT @LID as id");
+            return $st2->insert_id;
+        }catch(Exception $e){
+            throw New Exception( $e->getMessage() );
+        }
+        
+    }
+
+    public function update_statement($qry, $types, $params = []){
+        try{
+            $log = new LogController;
+            $st = $this->con->prepare($qry);
+            $st->bind_param($types, ...$params);
+            if($st === false) {
+                throw New Exception("No se puede preparar: " . $qry);
+            }
+            $st->execute();
+            return $st;
+        }catch(Exception $e){
+            throw New Exception( $e->getMessage() );
+        }
+        
+    }
+
+    public function delete_statement($qry, $types, $params = []){
+        try{
+            $log = new LogController;
+            $st = $this->con->prepare($qry);
+            $st->bind_param($types, ...$params);
+            if($st === false) {
+                throw New Exception("No se puede preparar: " . $qry);
+            }
+            $st->execute();
+            return $st;
+        }catch(Exception $e){
+            throw New Exception( $e->getMessage() );
+        }   
     }
 
 }
